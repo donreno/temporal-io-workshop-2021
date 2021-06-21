@@ -11,7 +11,7 @@ Como se puede ver en el diagrama, este representa una transferencia electronica 
 ## Iniciando modulo
 Para iniciar el modulo debemos hacer un go mod init.
 ```sh
-$ go mod init github.com/donreno/temporal-io-workshop-2021.
+$ go mod init github.com/donreno/temporal-io-workshop-2021
 ```
 Ojo con el nombre del repositorio en caso de que hagas un fork.
 
@@ -24,7 +24,7 @@ $ go get github.com/gofiber/fiber/v2
 ```
 
 ## Componentes del workflow
-Este Workflow esta compuesto por 3 componentes:
+Este Workflow esta compuesto por 3 componentes: `workflow`, `starter` y `workflow`.
 
 ### Workflow
 Este es el workflow y las actividades que se realizan en este, el codigo de este componente corresponde al diagrama presentado en la seccion de arriba.
