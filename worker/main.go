@@ -16,7 +16,7 @@ func main() {
 
 	defer c.Close()
 
-	w := worker.New(c, "transfer-workflow", worker.Options{})
+	w := worker.New(c, "transfer-workflow-queue", worker.Options{})
 
 	w.RegisterWorkflow(workflow.TransferWorkflow)
 	w.RegisterActivity(workflow.GetCustomerDetails)

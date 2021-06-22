@@ -92,9 +92,9 @@ func executeTransfer(ctx workflow.Context, logger log.Logger, transfer Transfer)
 }
 
 func notifyFailedTransfer(ctx workflow.Context, transfer Transfer) {
-	workflow.ExecuteActivity(ctx, NotifyFailedTransfer, transfer.Origin, transfer.Destination, transfer.Amount)
+	defer workflow.ExecuteActivity(ctx, NotifyFailedTransfer, transfer.Origin, transfer.Destination, transfer.Amount).Get(ctx, nil)
 }
 
 func notifySuccessfulTransfer(ctx workflow.Context, transfer Transfer) {
-	workflow.ExecuteActivity(ctx, NotifySuccessfulTransfer, transfer.Origin, transfer.Destination, transfer.Amount)
+	defer workflow.ExecuteActivity(ctx, NotifySuccessfulTransfer, transfer.Origin, transfer.Destination, transfer.Amount).Get(ctx, nil)
 }

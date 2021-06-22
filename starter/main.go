@@ -9,13 +9,6 @@ import (
 )
 
 func main() {
-	c, err := client.NewClient(client.Options{})
-	if err != nil {
-		log.Fatalln("Error al crear cliente", err)
-	}
-
-	defer c.Close()
-
 	app := fiber.New()
 
 	workflowOpts := client.StartWorkflowOptions{
@@ -26,6 +19,14 @@ func main() {
 	app.Post("/transfer", func(ctx *fiber.Ctx) error {
 		var transfer workflow.Transfer
 		ctx.BodyParser(&transfer)
+
+		c, err := client.NewClient(client.Options{})
+		if err != nil {
+			log.Println("Error al crear cliente", err)
+			return ctx.Status(500).SendString("Error creando client de temporal")
+		}
+
+		defer c.Close()
 
 		exec, err := c.ExecuteWorkflow(ctx.Context(), workflowOpts, workflow.TransferWorkflow, transfer)
 		if err != nil {
