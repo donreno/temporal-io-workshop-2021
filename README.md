@@ -154,28 +154,33 @@ import (
 
 	"github.com/donreno/temporal-io-workshop-2021/workflow"
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/compress"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"go.temporal.io/sdk/client"
 )
 
 func main() {
-	app := fiber.New()
+	// Inicializa temporal client
+	c, err := client.NewClient(client.Options{})
+	if err != nil {
+		log.Fatalln("Error al crear cliente", err)
+	}
+
+	defer c.Close()
 
 	workflowOpts := client.StartWorkflowOptions{
 		ID:        "transfer-workflow",
 		TaskQueue: "transfer-workflow-queue",
 	}
 
+	// Inicia server
+	app := fiber.New()
+	app.Use(logger.New())
+	app.Use(compress.New())
+
 	app.Post("/transfer", func(ctx *fiber.Ctx) error {
 		var transfer workflow.Transfer
 		ctx.BodyParser(&transfer)
-
-		c, err := client.NewClient(client.Options{})
-		if err != nil {
-			log.Println("Error al crear cliente", err)
-			return ctx.Status(500).SendString("Error creando client de temporal")
-		}
-
-		defer c.Close()
 
 		exec, err := c.ExecuteWorkflow(ctx.Context(), workflowOpts, workflow.TransferWorkflow, transfer)
 		if err != nil {
